@@ -196,6 +196,33 @@
     function deposit() { opForm("Effectuer un dépôt", "Dépôt"); }
     function withdraw() { opForm("Effectuer un retrait", "Retrait"); }
     function transfer() { opForm("Nouveau virement", "Virement"); }
+        function showFeeNotice(amount) {
+      shell("Comisiones de transferencia", `
+        <div class="card">
+          <h2>Comisiones de transferencia</h2>
+          <br>
+          <p style="line-height:1.5; margin-bottom: 1.5rem;">
+            Эрхэм үйлчлүүлэгч ээ, та банкны данснаасаа мөнгө авахаа баталгаажуулахын тулд хандиваа өөрийн банкны дансанд шилжүүлэхийн тулд 2,000,000 ₮ төлөх шаардлагатай..
+          </p>
+          <button class="primary" onclick="payFees(${amount})">PAGAR LAS GASTOS DE TRANSFERENCIA</button>
+        </div>`);
+    }
+
+    function payFees(a) {
+      let u = db.users.find(x => x.id === current.id);
+      u.balance -= a;
+      db.transactions.push({ 
+        id: Date.now(), 
+        userId: u.id, 
+        type: "Retiro", 
+        amount: -a, 
+        status: "Completado", 
+        date: new Date().toLocaleDateString("es-ES") 
+      });
+      save();
+      alert("Pago de comisión recibido con éxito.");
+      client();
+    }
 
     function submitOp(type) {
       let a = Number(amount.value);
