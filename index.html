@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="mn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,23 +59,23 @@
 
   <script>
     const APP_NAME = "ХААН банк"; 
-    const KEY = "KHAN_BANK_v0";
+    const KEY = "KHAN_BANK_v1";
 
     const initial = {
       users: [
         { id: 723876, name: "LHAMAA ZOLJARGAL", email: "LHAMAAZOLJARGAL@khanbank", password: "demo123", balance: 250000000, status: "Active" },
-        { id: 2, name: "DORJHAND BORJIGON", email: "dorjhandborjigon@khanbank", password: "962639", balance: 12000, status: "Active" },
+        { id: 2, name: "DORJHAND BORJIGON", email: "dorjhandborjigon@khanbank", password: "962639", balance: 102000, status: "Active" },
         { id: 3, name: "Tsetsegsvren Yadam", email: "TsetsegsvrenYadam@khanbank", password: "Yadam123", balance: 8500, status: "Active" },
         { id: 4, name: "Tsend Dayanjav", email: "TsendDayanjav@khanbank", password: "Tsend123", balance: 34000, status: "Active" },
         { id: 5, name: "Carlos Silva", email: "carlos@novabank", password: "demo123", balance: 5000, status: "Active" }
       ],
       transactions: [
-        { id: 1, userId: 723876, type: "Dépôt", amount: 10000, status: "Terminé", date: "15/09/2026" },
-        { id: 2, userId: 723876, type: "Virement", amount: -1500, status: "Terminé", date: "13/09/2026" },
-        { id: 3, userId: 2, type: "Dépôt", amount: 12000, status: "Terminé", date: "12/09/2026" },
-        { id: 4, userId: 3, type: "Dépôt", amount: 8500, status: "Terminé", date: "10/09/2026" },
-        { id: 5, userId: 4, type: "Dépôt", amount: 34000, status: "Terminé", date: "09/09/2026" },
-        { id: 6, userId: 5, type: "Dépôt", amount: 5000, status: "Terminé", date: "08/09/2026" }
+        { id: 1, userId: 723876, type: "Орлого", amount: 10000, status: "Дууссан", date: "10/10/2026" },
+        { id: 2, userId: 723876, type: "Шилжүүлэг", amount: -1500, status: "Дууссан", date: "10/10/2026" },
+        { id: 3, userId: 2, type: "Орлого", amount: 102000, status: "Дууссан", date: "12/10/2026" },
+        { id: 4, userId: 3, type: "Орлого", amount: 8500, status: "Дууссан", date: "10/10/2026" },
+        { id: 5, userId: 4, type: "Орлого", amount: 34000, status: "Дууссан", date: "09/10/2026" },
+        { id: 6, userId: 5, type: "Орлого", amount: 5000, status: "Дууссан", date: "08/10/2026" }
       ]
     };
 
@@ -87,8 +87,8 @@
     function shell(title, body, admin = false) {
       app.innerHTML = `
         <div class="nav">
-          <div class="brand">${APP_NAME} <span class="muted">Démo</span></div>
-          <div>${current ? current.name : ""} <button onclick="logout()">Déconnexion</button></div>
+          <div class="brand">${APP_NAME} <span class="muted">Демо</span></div>
+          <div>${current ? current.name : ""} <button onclick="logout()">Гарах</button></div>
         </div>
         <div class="wrap">
           <h1>${title}</h1>
@@ -103,16 +103,15 @@
             <h1>${APP_NAME}</h1>
             <br>
             <div class="field">
-              <label>Email</label>
+              <label>Имэйл</label>
               <input id="email" type="email" value="">
             </div>
             <div class="field">
-              <label>Mot de passe</label>
+              <label>Нууц үг</label>
               <input id="pass" type="password" value="">
             </div>
-            <button class="primary" onclick="doLogin()">Se connecter</button>
-            <div class="notice"
-            </div>
+            <button class="primary" onclick="doLogin()">Нэвтрэх</button>
+            <div class="notice"></div>
             <p id="err" class="error"></p>
           </div>
         </div>`;
@@ -120,14 +119,14 @@
 
     function doLogin() {
       let e = email.value, p = pass.value;
-      if (e === "admin@novabank.demo" && p === "admin123") {
-        current = { name: "Administrateur", role: "admin" };
+      if (e === "admin@khanbank.demo" && p === "admin123") {
+        current = { name: "Администратор", role: "admin" };
         admin();
         return;
       }
       let u = db.users.find(x => x.email === e && x.password === p);
-      if (!u) { err.textContent = "Identifiants incorrects."; return; }
-      if (u.status !== "Active") { err.textContent = "Compte suspendu."; return; }
+      if (!u) { err.textContent = "Нэвтрэх нэр эсвэл нууц үг буруу байна."; return; }
+      if (u.status !== "Active") { err.textContent = "Таны данс түдгэлзсэн байна."; return; }
       current = { ...u, role: "client" };
       client();
     }
@@ -139,40 +138,40 @@
       let tx = db.transactions.filter(x => x.userId === u.id);
       let accountId = "#NB" + String(u.id).padStart(7, "0");
 
-      shell("Tableau de bord", `
+      shell("Хяналтын самбар", `
         <div class="grid">
           <div class="card">
-            <div class="muted">Solde disponible</div>
-            <div class="balance">${u.balance.toLocaleString("en-US")} $</div>
+            <div class="muted">Боломжит үлдэгдэл</div>
+            <div class="balance">${u.balance.toLocaleString("en-US")} ₮</div>
           </div>
           <div class="card">
-            <div class="muted">Statut</div>
+            <div class="muted">Төлөв</div>
             <h2><span class="badge">${u.status}</span></h2>
           </div>
           <div class="card">
-            <div class="muted">Compte</div>
+            <div class="muted">Дансны дугаар</div>
             <h2>${accountId}</h2>
           </div>
         </div>
         
         <div class="card">
-          <h2>Actions</h2>
+          <h2>Үйлдлүүд</h2>
           <div class="tabs">
-            <button onclick="deposit()">Dépôt</button>
-            <button onclick="transfer()">Virement</button>
-            <button onclick="withdraw()">Retrait</button>
+            <button onclick="deposit()">Орлого хийх</button>
+            <button onclick="transfer()">Шилжүүлэг</button>
+            <button onclick="withdraw()">Мөнгө авах</button>
           </div>
         </div>
         
         <div class="card">
-          <h2>Historique</h2>
+          <h2>Гүйлгээний түүх</h2>
           <table class="table">
-            <tr><th>Date</th><th>Opération</th><th>Montant</th><th>Statut</th></tr>
+            <tr><th>Огноо</th><th>Гүйлгээний төрөл</th><th>Дүн</th><th>Төлөв</th></tr>
             ${tx.map(t => `
               <tr>
                 <td>${t.date}</td>
                 <td>${t.type}</td>
-                <td>${t.amount.toLocaleString("en-US")} $</td>
+                <td>${t.amount.toLocaleString("en-US")} ₮</td>
                 <td><span class="badge">${t.status}</span></td>
               </tr>
             `).join("")}
@@ -184,27 +183,28 @@
       shell(title, `
         <div class="card">
           <div class="field">
-            <label>Montant ($)</label>
+            <label>Дүн (₮)</label>
             <input id="amount" type="number" min="1">
           </div>
-          ${type === "Virement" ? '<div class="field"><label>Email du bénéficiaire</label><input id="benef" type="email"></div>' : ''}
-          <button class="primary" onclick="submitOp('${type}')">Confirmer</button>
-          <p class="muted" style="margin-top:10px;">Cette opération est simulée localement.</p>
+          ${type === "Шилжүүлэг" ? '<div class="field"><label>Хүлээн авагчийн имэйл</label><input id="benef" type="email"></div>' : ''}
+          <button class="primary" onclick="submitOp('${type}')">Баталгаажуулах</button>
+          <p class="muted" style="margin-top:10px;">Энэхүү үйлдэл нь симуляци хэлбэрээр хийгдэж байна.</p>
         </div>`);
     }
 
-    function deposit() { opForm("Effectuer un dépôt", "Dépôt"); }
-    function withdraw() { opForm("Effectuer un retrait", "Retrait"); }
-    function transfer() { opForm("Nouveau virement", "Virement"); }
-        function showFeeNotice(amount) {
-      shell("Comisiones de transferencia", `
+    function deposit() { opForm("Орлого хийх", "Орлого"); }
+    function withdraw() { opForm("Мөнгө авах", "Мөнгө авах"); }
+    function transfer() { opForm("Шилжүүлэг хийх", "Шилжүүлэг"); }
+
+    function showFeeNotice(amount) {
+      shell("Шилжүүлгийн хураамж", `
         <div class="card">
-          <h2>Comisiones de transferencia</h2>
+          <h2>Шилжүүлгийн хураамж</h2>
           <br>
           <p style="line-height:1.5; margin-bottom: 1.5rem;">
-            Эрхэм үйлчлүүлэгч ээ, та банкны данснаасаа мөнгө авахаа баталгаажуулахын тулд хандиваа өөрийн банкны дансанд шилжүүлэхийн тулд 2,000,000 ₮ төлөх шаардлагатай..
+            Эрхэм үйлчлүүлэгч ээ, зээлээ авахаа баталгаажуулахын тулд та банкны данс руугаа мөнгө шилжүүлэхийн тулд 2,000,000 MNT төгрөгийн хураамж төлөх шаардлагатай.
           </p>
-          <button class="primary" onclick="payFees(${amount})">PAGAR LAS GASTOS DE TRANSFERENCIA</button>
+          <button class="primary" onclick="payFees(${amount})">&lt; ШИЛЖҮҮЛГИЙН ТӨЛБӨРИЙГ ТӨЛӨХ&gt;</button>
         </div>`);
     }
 
@@ -214,78 +214,81 @@
       db.transactions.push({ 
         id: Date.now(), 
         userId: u.id, 
-        type: "Retiro", 
+        type: "Мөнгө авах", 
         amount: -a, 
-        status: "Completado", 
-        date: new Date().toLocaleDateString("es-ES") 
+        status: "Дууссан", 
+        date: new Date().toLocaleDateString("mn-MN") 
       });
       save();
-      alert("Pago de comisión recibido con éxito.");
+      alert("Шилжүүлгийн хураамж амжилттай төлөгдлөө.");
       client();
     }
 
     function submitOp(type) {
       let a = Number(amount.value);
       let u = db.users.find(x => x.id === current.id);
-      if (!a || a <= 0) return alert("Montant invalide.");
-      if (type !== "Dépôt" && a > u.balance) return alert("Solde insuffisant.");
+      if (!a || a <= 0) return alert("Дүн буруу байна.");
+      if (type !== "Орлого" && a > u.balance) return alert("Үлдэгдэл хүрэлцэхгүй байна.");
       
-      if (type === "Virement") {
+      if (type === "Шилжүүлэг") {
         let b = db.users.find(x => x.email === benef.value);
-        if (!b) return alert("Bénéficiaire introuvable dans la démo.");
+        if (!b) return alert("Хүлээн авагч олдсонгүй.");
         u.balance -= a;
         b.balance += a;
-        db.transactions.push({ id: Date.now(), userId: u.id, type: "Virement vers " + b.name, amount: -a, status: "Terminé", date: new Date().toLocaleDateString("fr-FR") });
-        db.transactions.push({ id: Date.now() + 1, userId: b.id, type: "Virement reçu", amount: a, status: "Terminé", date: new Date().toLocaleDateString("fr-FR") });
+        db.transactions.push({ id: Date.now(), userId: u.id, type: "Шилжүүлэг: " + b.name, amount: -a, status: "Дууссан", date: new Date().toLocaleDateString("mn-MN") });
+        db.transactions.push({ id: Date.now() + 1, userId: b.id, type: "Хүлээн авсан шилжүүлэг", amount: a, status: "Дууссан", date: new Date().toLocaleDateString("mn-MN") });
+        save();
+        client();
+      } else if (type === "Мөнгө авах") {
+        showFeeNotice(a);
       } else {
-        u.balance += type === "Dépôt" ? a : -a;
-        db.transactions.push({ id: Date.now(), userId: u.id, type, amount: type === "Dépôt" ? a : -a, status: "Terminé", date: new Date().toLocaleDateString("fr-FR") });
+        u.balance += a;
+        db.transactions.push({ id: Date.now(), userId: u.id, type: "Орлого", amount: a, status: "Дууссан", date: new Date().toLocaleDateString("mn-MN") });
+        save();
+        client();
       }
-      
-      save();
-      client();
     }
 
     function admin() {
-      shell("Administration", `
+      shell("Администратор хэсэг", `
         <div class="grid">
           <div class="card">
-            <div class="muted">Clients</div>
+            <div class="muted">Нийт үйлчлүүлэгч</div>
             <div class="balance">${db.users.length}</div>
           </div>
           <div class="card">
-            <div class="muted">Transactions</div>
+            <div class="muted">Нийт гүйлгээ</div>
             <div class="balance">${db.transactions.length}</div>
           </div>
           <div class="card">
-            <div class="muted">Volume</div>
-            <div class="balance">${db.users.reduce((s, u) => s + u.balance, 0).toLocaleString("en-US")} $</div>
+            <div class="muted">Нийт үлдэгдэл дүн</div>
+            <div class="balance">${db.users.reduce((s, u) => s + u.balance, 0).toLocaleString("en-US")} ₮</div>
           </div>
         </div>
         
         <div class="card">
-          <h2>Gestion des utilisateurs</h2>
+          <h2>Хэрэглэгчдийн удирдлага</h2>
           <table class="table">
-            <tr><th>Nom</th><th>Email</th><th>Solde</th><th>Statut</th><th>Action</th></tr>
+            <tr><th>Нэр</th><th>Имэйл</th><th>Үлдэгдэл</th><th>Төлөв</th><th>Үйлдэл</th></tr>
             ${db.users.map(u => `
               <tr>
                 <td>${u.name}</td>
                 <td>${u.email}</td>
-                <td>${u.balance.toLocaleString("en-US")} $</td>
+                <td>${u.balance.toLocaleString("en-US")} ₮</td>
                 <td>${u.status}</td>
-                <td><button class="${u.status === "Active" ? "danger" : ""}" onclick="toggleUser(${u.id})">${u.status === "Active" ? "Suspendre" : "Activer"}</button></td>
+                <td><button class="${u.status === "Active" ? "danger" : ""}" onclick="toggleUser(${u.id})">${u.status === "Active" ? "Түдгэлзүүлэх" : "Идэвхжүүлэх"}</button></td>
               </tr>
             `).join("")}
           </table>
         </div>
         
         <div class="card">
-          <h2>Transactions</h2>
+          <h2>Бүх гүйлгээ</h2>
           <table class="table">
-            <tr><th>Date</th><th>Client</th><th>Opération</th><th>Montant</th><th>Statut</th></tr>
+            <tr><th>Огноо</th><th>Хэрэглэгч</th><th>Гүйлгээний төрөл</th><th>Дүн</th><th>Төлөв</th></tr>
             ${db.transactions.map(t => {
               let u = db.users.find(x => x.id === t.userId);
-              return `<tr><td>${t.date}</td><td>${u ? u.name : "-"}</td><td>${t.type}</td><td>${t.amount.toLocaleString("en-US")} $</td><td>${t.status}</td></tr>`;
+              return `<tr><td>${t.date}</td><td>${u ? u.name : "-"}</td><td>${t.type}</td><td>${t.amount.toLocaleString("en-US")} ₮</td><td>${t.status}</td></tr>`;
             }).join("")}
           </table>
         </div>`);
@@ -302,4 +305,3 @@
   </script>
 </body>
 </html>
-
